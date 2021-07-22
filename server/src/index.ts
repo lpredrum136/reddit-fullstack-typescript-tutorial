@@ -14,6 +14,8 @@ import session from 'express-session'
 import { COOKIE_NAME, __prod__ } from './constants'
 import { Context } from './types/Context'
 import { PostResolver } from './resolvers/post'
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'
+import cors from 'cors'
 
 const main = async () => {
 	await createConnection({
@@ -27,6 +29,13 @@ const main = async () => {
 	})
 
 	const app = express()
+
+	app.use(
+		cors({
+			origin: 'http://localhost:3000',
+			credentials: true
+		})
+	)
 
 	// Session/Cookie store
 	const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME_DEV_PROD}:${process.env.SESSION_DB_PASSWORD_DEV_PROD}@reddit.d1jnu.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`
@@ -60,8 +69,11 @@ const main = async () => {
 			resolvers: [HelloResolver, UserResolver, PostResolver],
 			validate: false
 		}),
-		context: ({ req, res }): Context => ({ req, res })
+		context: ({ req, res }): Context => ({ req, res }),
+		plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
 	})
+
+	await apolloServer.start()
 
 	apolloServer.applyMiddleware({ app, cors: false })
 
