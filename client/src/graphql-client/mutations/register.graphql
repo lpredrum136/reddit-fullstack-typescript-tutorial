@@ -4,13 +4,10 @@ mutation Register($registerInput: RegisterInput!) {
 		success
 		message
 		user {
-			id
-			username
-			email
+			...userInfo
 		}
 		errors {
-			field
-			message
+			...fieldError
 		}
 	}
 }

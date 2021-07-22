@@ -5,8 +5,10 @@ import InputField from '../components/InputField'
 
 import { RegisterInput, useRegisterMutation } from '../generated/graphql'
 import { mapFieldErrors } from '../helpers/mapFieldErrors'
+import { useRouter } from 'next/router'
 
 const Register = () => {
+	const router = useRouter()
 	const initialValues: RegisterInput = { username: '', email: '', password: '' }
 
 	const [registerUser, { loading: _registerUserLoading, data, error }] =
@@ -24,6 +26,9 @@ const Register = () => {
 
 		if (response.data?.register.errors) {
 			setErrors(mapFieldErrors(response.data.register.errors))
+		} else if (response.data?.register.user) {
+			// register successfully
+			router.push('/')
 		}
 	}
 
