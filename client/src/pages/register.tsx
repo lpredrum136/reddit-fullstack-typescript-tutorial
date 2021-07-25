@@ -3,7 +3,12 @@ import { FormControl, Button, Box } from '@chakra-ui/react'
 import Wrapper from '../components/Wrapper'
 import InputField from '../components/InputField'
 
-import { RegisterInput, useRegisterMutation } from '../generated/graphql'
+import {
+	MeDocument,
+	MeQuery,
+	RegisterInput,
+	useRegisterMutation
+} from '../generated/graphql'
 import { mapFieldErrors } from '../helpers/mapFieldErrors'
 import { useRouter } from 'next/router'
 
@@ -21,6 +26,14 @@ const Register = () => {
 		const response = await registerUser({
 			variables: {
 				registerInput: values
+			},
+			update(cache, { data }) {
+				if (data?.register.success) {
+					cache.writeQuery<MeQuery>({
+						query: MeDocument,
+						data: { me: data.register.user }
+					})
+				}
 			}
 		})
 
@@ -34,7 +47,7 @@ const Register = () => {
 
 	return (
 		<Wrapper>
-			{error && <p>Failed to register</p>}
+			{error && <p>Failed to register. Internal server error</p>}
 			{data && data.register.success && (
 				<p>Registered successfully {JSON.stringify(data)}</p>
 			)}
