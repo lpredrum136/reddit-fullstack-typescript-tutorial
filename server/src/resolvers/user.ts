@@ -7,6 +7,9 @@ import { validateRegisterInput } from '../utils/validateRegisterInput'
 import { LoginInput } from '../types/LoginInput'
 import { Context } from '../types/Context'
 import { COOKIE_NAME } from '../constants'
+import { ForgotPasswordInput } from '../types/ForgotPassword'
+import { sendEmail } from '../utils/sendEmail'
+import { TokenModel } from '../models/Token'
 
 @Resolver()
 export class UserResolver {
@@ -138,5 +141,27 @@ export class UserResolver {
 				resolve(true)
 			})
 		})
+	}
+
+	@Mutation(_return => Boolean)
+	async forgotPassword(
+		@Arg('forgotPasswordInput') forgotPasswordInput: ForgotPasswordInput
+	): Promise<boolean> {
+		const user = await User.findOne({ email: forgotPasswordInput.email })
+
+		if (!user) return true
+
+		const token = 'asdfasdhfljsglhsjfdg'
+
+		// save token to db
+		await new TokenModel({ userId: `${user.id}`, token }).save()
+
+		// send reset password link to user via email
+		await sendEmail(
+			forgotPasswordInput.email,
+			`<a href="http://localhost:3000/change-password?token=${token}">Click here to reset your password</a>`
+		)
+
+		return true
 	}
 }
