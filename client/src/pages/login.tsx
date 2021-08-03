@@ -1,11 +1,5 @@
-import {
-	Box,
-	Button,
-	FormControl,
-	Spinner,
-	Flex,
-	useToast
-} from '@chakra-ui/react'
+import { Box, Button, Spinner, Flex, useToast, Link } from '@chakra-ui/react'
+import NextLink from 'next/link'
 import { Form, Formik, FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import InputField from '../components/InputField'
@@ -76,36 +70,41 @@ const Login = () => {
 					<Spinner />
 				</Flex>
 			) : (
-				<Wrapper>
+				<Wrapper size='small'>
 					{error && <p>Failed to login. Internal server error.</p>}
 					<Formik initialValues={initialValues} onSubmit={onLoginSubmit}>
 						{({ isSubmitting }) => (
 							<Form>
-								<FormControl>
-									<InputField
-										name='usernameOrEmail'
-										placeholder='Username or Email'
-										label='Username or Email'
-										type='text'
-									/>
+								<InputField
+									name='usernameOrEmail'
+									placeholder='Username or Email'
+									label='Username or Email'
+									type='text'
+								/>
 
-									<Box mt={4}>
-										<InputField
-											name='password'
-											placeholder='Password'
-											label='Password'
-											type='password'
-										/>
-									</Box>
-									<Button
-										type='submit'
-										colorScheme='teal'
-										mt={4}
-										isLoading={isSubmitting}
-									>
-										Login
-									</Button>
-								</FormControl>
+								<Box mt={4}>
+									<InputField
+										name='password'
+										placeholder='Password'
+										label='Password'
+										type='password'
+									/>
+								</Box>
+
+								<Flex mt={2}>
+									<NextLink href='/forgot-password'>
+										<Link ml='auto'>Forgot Password</Link>
+									</NextLink>
+								</Flex>
+
+								<Button
+									type='submit'
+									colorScheme='teal'
+									mt={4}
+									isLoading={isSubmitting}
+								>
+									Login
+								</Button>
 							</Form>
 						)}
 					</Formik>

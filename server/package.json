@@ -24,6 +24,7 @@
 	},
 	"dependencies": {
 		"@typegoose/typegoose": "^8.0.1",
+		"@types/uuid": "^8.3.1",
 		"apollo-server-core": "^3.0.1",
 		"apollo-server-express": "^3.0.1",
 		"argon2": "^0.28.2",
@@ -34,10 +35,12 @@
 		"express": "^4.17.1",
 		"express-session": "^1.17.2",
 		"graphql": "^15.5.1",
+		"mongoose": "^5.13.5",
 		"nodemailer": "^6.6.3",
 		"pg": "^8.6.0",
 		"reflect-metadata": "^0.1.13",
 		"type-graphql": "^1.1.1",
-		"typeorm": "^0.2.34"
+		"typeorm": "^0.2.34",
+		"uuid": "^8.3.2"
 	}
 }

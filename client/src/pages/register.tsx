@@ -72,43 +72,41 @@ const Register = () => {
 					<Spinner />
 				</Flex>
 			) : (
-				<Wrapper>
+				<Wrapper size='small'>
 					{error && <p>Failed to register. Internal server error</p>}
 					<Formik initialValues={initialValues} onSubmit={onRegisterSubmit}>
 						{({ isSubmitting }) => (
 							<Form>
-								<FormControl>
+								<InputField
+									name='username'
+									placeholder='Username'
+									label='Username'
+									type='text'
+								/>
+								<Box mt={4}>
 									<InputField
-										name='username'
-										placeholder='Username'
-										label='Username'
+										name='email'
+										placeholder='Email'
+										label='Email'
 										type='text'
 									/>
-									<Box mt={4}>
-										<InputField
-											name='email'
-											placeholder='Email'
-											label='Email'
-											type='text'
-										/>
-									</Box>
-									<Box mt={4}>
-										<InputField
-											name='password'
-											placeholder='Password'
-											label='Password'
-											type='password'
-										/>
-									</Box>
-									<Button
-										type='submit'
-										colorScheme='teal'
-										mt={4}
-										isLoading={isSubmitting}
-									>
-										Register
-									</Button>
-								</FormControl>
+								</Box>
+								<Box mt={4}>
+									<InputField
+										name='password'
+										placeholder='Password'
+										label='Password'
+										type='password'
+									/>
+								</Box>
+								<Button
+									type='submit'
+									colorScheme='teal'
+									mt={4}
+									isLoading={isSubmitting}
+								>
+									Register
+								</Button>
 							</Form>
 						)}
 					</Formik>
