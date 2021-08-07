@@ -8,6 +8,7 @@ import {
 // import { concatPagination } from '@apollo/client/utilities'
 import merge from 'deepmerge'
 import isEqual from 'lodash/isEqual'
+import { Post } from '../generated/graphql'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
@@ -24,7 +25,34 @@ function createApolloClient() {
 			uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
 			credentials: 'include' // Additional fetch() options like `credentials` or `headers`
 		}),
-		cache: new InMemoryCache()
+		cache: new InMemoryCache({
+			typePolicies: {
+				Query: {
+					fields: {
+						posts: {
+							keyArgs: false,
+							merge(existing, incoming) {
+								let paginatedPosts: Post[] = []
+
+								if (existing && existing.paginatedPosts) {
+									paginatedPosts = paginatedPosts.concat(
+										existing.paginatedPosts
+									)
+								}
+
+								if (incoming && incoming.paginatedPosts) {
+									paginatedPosts = paginatedPosts.concat(
+										incoming.paginatedPosts
+									)
+								}
+
+								return { ...incoming, paginatedPosts }
+							}
+						}
+					}
+				}
+			}
+		})
 	})
 }
 
