@@ -16,6 +16,7 @@ import { Context } from './types/Context'
 import { PostResolver } from './resolvers/post'
 import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core'
 import cors from 'cors'
+import { Upvote } from './entities/Upvote'
 
 const main = async () => {
 	await createConnection({
@@ -25,7 +26,7 @@ const main = async () => {
 		password: process.env.DB_PASSWORD_DEV,
 		logging: true,
 		synchronize: true,
-		entities: [User, Post]
+		entities: [User, Post, Upvote]
 	})
 
 	const app = express()
