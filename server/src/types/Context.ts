@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { Session, SessionData } from 'express-session'
+import { buildDataLoaders } from 'src/utils/dataLoaders'
 import { Connection } from 'typeorm'
 
 export type Context = {
@@ -8,4 +9,5 @@ export type Context = {
 	}
 	res: Response
 	connection: Connection
+	dataLoaders: ReturnType<typeof buildDataLoaders>
 }
