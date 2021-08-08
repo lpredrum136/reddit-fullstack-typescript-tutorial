@@ -35,6 +35,13 @@ export class Post extends BaseEntity {
 	upvotes: Upvote[]
 
 	@Field()
+	@Column({ default: 0 })
+	points!: number
+
+	@Field()
+	voteType!: number
+
+	@Field()
 	@Column()
 	text!: string
 

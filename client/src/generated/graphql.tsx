@@ -57,6 +57,7 @@ export type Mutation = {
   createPost: PostMutationResponse;
   updatePost: PostMutationResponse;
   deletePost: PostMutationResponse;
+  vote: PostMutationResponse;
 };
 
 
@@ -96,6 +97,12 @@ export type MutationDeletePostArgs = {
   id: Scalars['ID'];
 };
 
+
+export type MutationVoteArgs = {
+  inputVoteValue: VoteType;
+  postId: Scalars['Int'];
+};
+
 export type PaginatedPosts = {
   __typename?: 'PaginatedPosts';
   totalCount: Scalars['Float'];
@@ -110,6 +117,8 @@ export type Post = {
   title: Scalars['String'];
   userId: Scalars['Float'];
   user: User;
+  points: Scalars['Float'];
+  voteType: Scalars['Float'];
   text: Scalars['String'];
   createdAt: Scalars['DateTime'];
   updatedAt: Scalars['DateTime'];
@@ -174,6 +183,11 @@ export type UserMutationResponse = IMutationResponse & {
   errors?: Maybe<Array<FieldError>>;
 };
 
+export enum VoteType {
+  Upvote = 'Upvote',
+  Downvote = 'Downvote'
+}
+
 export type FieldErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
@@ -203,7 +217,7 @@ export type PostMutationResponseFragment = (
 
 export type PostWithUserInfoFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'title' | 'text' | 'createdAt' | 'updatedAt' | 'textSnippet'>
+  & Pick<Post, 'id' | 'title' | 'text' | 'createdAt' | 'updatedAt' | 'textSnippet' | 'points' | 'voteType'>
   & { user: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username'>
@@ -332,6 +346,20 @@ export type UpdatePostMutation = (
   ) }
 );
 
+export type VoteMutationVariables = Exact<{
+  inputVoteValue: VoteType;
+  postId: Scalars['Int'];
+}>;
+
+
+export type VoteMutation = (
+  { __typename?: 'Mutation' }
+  & { vote: (
+    { __typename?: 'PostMutationResponse' }
+    & PostMutationResponseFragment
+  ) }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -406,6 +434,8 @@ export const PostWithUserInfoFragmentDoc = gql`
   createdAt
   updatedAt
   textSnippet
+  points
+  voteType
   user {
     id
     username
@@ -732,6 +762,40 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
+export const VoteDocument = gql`
+    mutation Vote($inputVoteValue: VoteType!, $postId: Int!) {
+  vote(inputVoteValue: $inputVoteValue, postId: $postId) {
+    ...postMutationResponse
+  }
+}
+    ${PostMutationResponseFragmentDoc}`;
+export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationVariables>;
+
+/**
+ * __useVoteMutation__
+ *
+ * To run a mutation, you first call `useVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [voteMutation, { data, loading, error }] = useVoteMutation({
+ *   variables: {
+ *      inputVoteValue: // value for 'inputVoteValue'
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, options);
+      }
+export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
+export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
+export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

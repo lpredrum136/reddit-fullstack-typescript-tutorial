@@ -19,7 +19,7 @@ import cors from 'cors'
 import { Upvote } from './entities/Upvote'
 
 const main = async () => {
-	await createConnection({
+	const connection = await createConnection({
 		type: 'postgres',
 		database: 'reddit',
 		username: process.env.DB_USERNAME_DEV,
@@ -70,7 +70,7 @@ const main = async () => {
 			resolvers: [HelloResolver, UserResolver, PostResolver],
 			validate: false
 		}),
-		context: ({ req, res }): Context => ({ req, res }),
+		context: ({ req, res }): Context => ({ req, res, connection }),
 		plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
 	})
 
