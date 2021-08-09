@@ -51,8 +51,8 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
 		// uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
 		uri:
 			process.env.NODE_ENV === 'production'
-				? process.env.API_URL_PROD
-				: 'http://localhost:4000/graphql',
+				? process.env.NEXT_PUBLIC_API_URL_PROD
+				: process.env.NEXT_PUBLIC_API_URL_DEV,
 		credentials: 'include', // Additional fetch() options like `credentials` or `headers`
 		fetch: enhancedFetch
 	})
