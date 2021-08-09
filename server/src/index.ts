@@ -18,23 +18,43 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 import cors from 'cors'
 import { Upvote } from './entities/Upvote'
 import { buildDataLoaders } from './utils/dataLoaders'
+import path from 'path'
 
 const main = async () => {
 	const connection = await createConnection({
 		type: 'postgres',
-		database: 'reddit',
-		username: process.env.DB_USERNAME_DEV,
-		password: process.env.DB_PASSWORD_DEV,
+		...(__prod__
+			? { url: process.env.DATABASE_URL }
+			: {
+					database: 'reddit',
+					username: process.env.DB_USERNAME_DEV,
+					password: process.env.DB_PASSWORD_DEV
+			  }),
 		logging: true,
-		synchronize: true,
-		entities: [User, Post, Upvote]
+		...(__prod__
+			? {
+					extra: {
+						ssl: {
+							rejectUnauthorized: false
+						}
+					},
+					ssl: true
+			  }
+			: {}),
+		...(__prod__ ? {} : { synchronize: true }),
+		entities: [User, Post, Upvote],
+		migrations: [path.join(__dirname, '/migrations/*')]
 	})
+
+	if (__prod__) await connection.runMigrations()
 
 	const app = express()
 
 	app.use(
 		cors({
-			origin: 'http://localhost:3000',
+			origin: __prod__
+				? process.env.CORS_ORIGIN_PROD
+				: process.env.CORS_ORIGIN_DEV,
 			credentials: true
 		})
 	)
@@ -58,7 +78,8 @@ const main = async () => {
 				maxAge: 1000 * 60 * 60, // one hour
 				httpOnly: true, // JS front end cannot access the cookie
 				secure: __prod__, // cookie only works in https
-				sameSite: 'lax' // protection against CSRF
+				sameSite: 'lax', // protection against CSRF
+				domain: __prod__ ? '.vercel.app' : undefined
 			},
 			secret: process.env.SESSION_SECRET_DEV_PROD as string,
 			saveUninitialized: false, // don't save empty sessions, right from the start
