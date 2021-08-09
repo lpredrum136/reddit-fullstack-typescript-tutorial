@@ -1,6 +1,5 @@
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { Flex, IconButton } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
 import { useState } from 'react'
 import {
 	PostWithUserInfoFragment,
