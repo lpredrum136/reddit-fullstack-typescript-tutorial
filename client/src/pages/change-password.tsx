@@ -30,7 +30,7 @@ const ChangePassword = () => {
 
 	const initialValues = { newPassword: '' }
 
-	const [changePassword, { loading }] = useChangePasswordMutation()
+	const [changePassword, _] = useChangePasswordMutation()
 
 	const [tokenError, setTokenError] = useState('')
 

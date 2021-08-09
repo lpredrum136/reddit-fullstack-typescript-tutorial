@@ -1,12 +1,5 @@
 import { Formik, Form, FormikHelpers } from 'formik'
-import {
-	FormControl,
-	Button,
-	Box,
-	Flex,
-	Spinner,
-	useToast
-} from '@chakra-ui/react'
+import { Button, Box, Flex, Spinner, useToast } from '@chakra-ui/react'
 import Wrapper from '../components/Wrapper'
 import InputField from '../components/InputField'
 
@@ -27,7 +20,7 @@ const Register = () => {
 
 	const initialValues: RegisterInput = { username: '', email: '', password: '' }
 
-	const [registerUser, { loading: _registerUserLoading, data, error }] =
+	const [registerUser, { loading: _registerUserLoading, error }] =
 		useRegisterMutation()
 
 	const toast = useToast()

@@ -21,8 +21,7 @@ const Login = () => {
 
 	const initialValues: LoginInput = { usernameOrEmail: '', password: '' }
 
-	const [loginUser, { loading: _loginUserLoading, data, error }] =
-		useLoginMutation()
+	const [loginUser, { loading: _loginUserLoading, error }] = useLoginMutation()
 
 	const toast = useToast()
 

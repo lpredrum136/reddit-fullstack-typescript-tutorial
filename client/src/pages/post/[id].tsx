@@ -6,10 +6,8 @@ import {
 	Button,
 	Flex,
 	Heading,
-	Spinner,
-	IconButton
+	Spinner
 } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
