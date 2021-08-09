@@ -18,7 +18,6 @@ enum VoteTypeValues {
 }
 
 const UpvoteSection = ({ post }: UpvoteSectionProps) => {
-	const router = useRouter()
 	const [vote, { loading }] = useVoteMutation()
 
 	const [loadingState, setLoadingState] = useState<
