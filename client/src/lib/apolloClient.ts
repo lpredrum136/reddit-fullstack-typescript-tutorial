@@ -48,7 +48,11 @@ function createApolloClient(headers: IncomingHttpHeaders | null = null) {
 	}
 
 	const httpLink = new HttpLink({
-		uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
+		// uri: 'http://localhost:4000/graphql', // Server URL (must be absolute)
+		uri:
+			process.env.NODE_ENV === 'production'
+				? process.env.API_URL_PROD
+				: 'http://localhost:4000/graphql',
 		credentials: 'include', // Additional fetch() options like `credentials` or `headers`
 		fetch: enhancedFetch
 	})
